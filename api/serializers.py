@@ -15,8 +15,8 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    comp_data = CompanySerializer()
-    dept_data = DepartmentSerializer()
+    company = CompanySerializer()
+    department = DepartmentSerializer()
 
     class Meta:
         model = Employee

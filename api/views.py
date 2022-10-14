@@ -28,21 +28,15 @@ class EmployeeAPIView(APIView):
 
         return response
 
-    def get(self, request, pk=None):
+    
         
+    def get(self, request, pk=None):
         if pk:
-            # print("first")
-            data = Employee.objects.get(pk=pk)
-            # print(data.company.name)
-            # cmp = Company.objects.get(pk=data.company.id)
-            # print(cmp)
+            data = Employee.objects.get(id=pk)
             serializer = EmployeeSerializer(data)
-
         else:
-           
             data = Employee.objects.all()
             serializer = EmployeeSerializer(data, many=True)
-
         return Response(serializer.data)
 
     def put(self, request, pk=None):
