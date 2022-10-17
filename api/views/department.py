@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse , HttpRequest
 from api.utils.status_code import *
 from api.utils.constant import *
 from rest_framework.views import APIView
@@ -9,7 +9,7 @@ from api.serializers.department import DepartmentSerializer
 
 class Department(APIView):
     
-    def post(self, request):
+    def post(self, request:HttpRequest) -> HttpResponse:
         """ To insert the department data
 
         Args:
@@ -38,7 +38,7 @@ class Department(APIView):
             return response
 
 
-    def get(self, request, pk=None):
+    def get(self, request = HttpRequest, pk=None) -> HttpResponse:
         """ To fetch the data of all department or to fetch data of particular department id
 
         Args:
@@ -74,7 +74,7 @@ class Department(APIView):
     
 
 
-    def put(self, request, pk = None):
+    def put(self, request = HttpRequest, pk=None) -> HttpResponse:
         """ To updated the department data for particular id 
 
         Args:
@@ -114,7 +114,7 @@ class Department(APIView):
             )
             return response
 
-    def delete(self, request, pk = None):
+    def delete(self, request = HttpRequest, pk=None) -> HttpResponse:
         """ To delete department data for particular department id or all data of department
 
         Args:

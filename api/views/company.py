@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse , HttpRequest
 from api.utils.status_code import *
 from api.utils.constant import *
 from rest_framework.views import APIView
@@ -10,7 +10,7 @@ from api.serializers.company import CompanySerializer
 
 class Company(APIView):
     
-    def post(self, request):
+    def post(self, request:HttpRequest) -> HttpResponse:
         """ To insert the company data
 
         Args:
@@ -34,14 +34,14 @@ class Company(APIView):
         
         except Exception as exception:
             response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
+            UNEXPECTED_EXCEPTION % exception, status =  Status.STATUS_CODE_500
             )
             
             return response
 
 
 
-    def get(self, request, pk=None):
+    def get(self, request = HttpRequest, pk=None) -> HttpResponse:
         """ To fetch the data of all company or to fetch data of particular company id
 
         Args:
@@ -76,7 +76,7 @@ class Company(APIView):
             return response
 
 
-    def put(self, request, pk = None):
+    def put(self, request = HttpRequest, pk=None) -> HttpResponse:
         """ To updated the company data for particular id 
 
         Args:
@@ -115,7 +115,7 @@ class Company(APIView):
             )
             return response
 
-    def delete(self, pk = None):
+    def delete(self, request = HttpRequest, pk=None) -> HttpResponse:
         """ To delete company data for particular company id 
 
         Args:
