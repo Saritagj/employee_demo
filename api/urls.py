@@ -1,25 +1,26 @@
 from django.urls import path
-from api import views
+from api.views.employee import Employee
+from api.views.company import Company
+from api.views.department import Department
 
 
 urlpatterns = [
     # for inserting employee data
-    path("employee", views.EmployeeAPIView.as_view()),
+    path("employee", Employee.as_view()),
     # for fetching all the employee data 
-    path("employees/data", views.EmployeeAPIView.as_view()), 
-       
-    # for fetching employee data for particular id    
-    # path("employee/data/<pk>", views.EmployeeAPIView.as_view()),    
-    
-    # for updating employee data for particular id 
-    path("employee/update/<pk>", views.EmployeeAPIView.as_view()),
-    # for deleting employee data
-    path("employee/delete/<pk>", views.EmployeeAPIView.as_view()),
-    # for inserting department data
-    path("department", views.DepartmentAPIView.as_view()),
-    # for inseting company
-    path("company", views.CompanyAPIView.as_view()),
-      
+    path("employee/<pk>", Employee.as_view()), 
+
+    # for inserting Company data
+    path("company", Company.as_view()),
+    # for fetching all the Company data 
+    path("company/<pk>", Company.as_view()),       
+
+    # for inserting Department data
+    path("department", Department.as_view()),
+    # for fetching all the Department data 
+    path("department/<pk>", Department.as_view()), 
+
+
 ]
 
 
