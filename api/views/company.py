@@ -1,17 +1,17 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from api.utils.status_code import *
 from api.utils.constant import *
 from rest_framework.views import APIView
 from api.models import MCompany
 from rest_framework.response import Response
-from rest_framework import status
+
+# from rest_framework import status
 from api.serializers.company import CompanySerializer
 
 
 class Company(APIView):
-    
-    def post(self, request):
-        """ To insert the company data
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """To insert the company data
 
         Args:
             request : Post Request object
@@ -31,18 +31,16 @@ class Company(APIView):
             # Return Response to User
             response = Response(serializer.data)
             return response
-        
+
         except Exception as exception:
             response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
+                UNEXPECTED_EXCEPTION % exception, status=Status.STATUS_CODE_400
             )
-            
+
             return response
 
-
-
-    def get(self, request, pk=None):
-        """ To fetch the data of all company or to fetch data of particular company id
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """To fetch the data of all company or to fetch data of particular company id
 
         Args:
             request : Get request object
@@ -65,19 +63,13 @@ class Company(APIView):
 
         except Exception as exception:
             response = HttpResponse(
-            COMPANY_ID_NOT_PRESENT % exception, Status.STATUS_CODE_404
+                COMPANY_ID_NOT_PRESENT % exception,
+                status=Status.STATUS_CODE_404,
             )
             return response
 
-        except :
-            response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
-            )
-            return response
-
-
-    def put(self, request, pk = None):
-        """ To updated the company data for particular id 
+    def put(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """To updated the company data for particular id
 
         Args:
             request : Put request object
@@ -87,7 +79,7 @@ class Company(APIView):
             Response : Updated data of company for company id
         """
         try:
-            update = MCompany.objects.get(pk = pk)
+            update = MCompany.objects.get(pk=pk)
             serializer = CompanySerializer(
                 instance=update, data=request.data, partial=True
             )
@@ -102,21 +94,16 @@ class Company(APIView):
             }
 
             return response
-        
+
         except Exception as exception:
             response = HttpResponse(
-            COMPANY_ID_NOT_PRESENT % exception, Status.STATUS_CODE_404
+                COMPANY_ID_NOT_PRESENT % exception,
+                status=Status.STATUS_CODE_404,
             )
             return response
 
-        except :
-            response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
-            )
-            return response
-
-    def delete(self, pk = None):
-        """ To delete company data for particular company id 
+    def delete(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """To delete company data for particular company id
 
         Args:
             pk : id of company. Defaults to None.
@@ -126,7 +113,7 @@ class Company(APIView):
         """
         try:
             if pk:
-                delete = MCompany.objects.get(pk = pk)
+                delete = MCompany.objects.get(pk=pk)
                 delete.delete()
 
             else:
@@ -134,15 +121,10 @@ class Company(APIView):
                 delete.data()
 
             return Response({"message": "Data  Deleted Successfully"})
-    
+
         except Exception as exception:
             response = HttpResponse(
-            COMPANY_ID_NOT_PRESENT % exception, Status.STATUS_CODE_404
-            )
-            return response
-
-        except :
-            response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
+                COMPANY_ID_NOT_PRESENT % exception,
+                status=Status.STATUS_CODE_404,
             )
             return response

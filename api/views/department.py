@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from api.utils.status_code import *
 from api.utils.constant import *
 from rest_framework.views import APIView
@@ -8,9 +8,8 @@ from api.serializers.department import DepartmentSerializer
 
 
 class Department(APIView):
-    
-    def post(self, request):
-        """ To insert the department data
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """To insert the department data
 
         Args:
             request : Post Request object
@@ -33,13 +32,12 @@ class Department(APIView):
 
         except Exception as exception:
             response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
+                UNEXPECTED_EXCEPTION % exception, status=Status.STATUS_CODE_400
             )
             return response
 
-
-    def get(self, request, pk=None):
-        """ To fetch the data of all department or to fetch data of particular department id
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """To fetch the data of all department or to fetch data of particular department id
 
         Args:
             request : Get request object
@@ -47,7 +45,7 @@ class Department(APIView):
         Returns:
             Response : Json data of all department or for particular department id
         """
-        try: 
+        try:
             if pk:
 
                 data = MDepartment.objects.get(id=pk)
@@ -62,20 +60,13 @@ class Department(APIView):
 
         except Exception as exception:
             response = HttpResponse(
-            DEPARTMENT_ID_NOT_PRESENT % exception, Status.STATUS_CODE_404
+                DEPARTMENT_ID_NOT_PRESENT % exception,
+                status=Status.STATUS_CODE_404,
             )
             return response
 
-        except :
-            response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
-            )
-            return response
-    
-
-
-    def put(self, request, pk = None):
-        """ To updated the department data for particular id 
+    def put(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """To updated the department data for particular id
 
         Args:
             request : Put request object
@@ -84,9 +75,9 @@ class Department(APIView):
         Returns:
             Response : Updated data of department for department id
         """
-        
+
         try:
-            update = MDepartment.objects.get(pk = pk)
+            update = MDepartment.objects.get(pk=pk)
             serializer = DepartmentSerializer(
                 instance=update, data=request.data, partial=True
             )
@@ -104,18 +95,13 @@ class Department(APIView):
 
         except Exception as exception:
             response = HttpResponse(
-            DEPARTMENT_ID_NOT_PRESENT % exception, Status.STATUS_CODE_404
+                DEPARTMENT_ID_NOT_PRESENT % exception,
+                status=Status.STATUS_CODE_404,
             )
             return response
 
-        except :
-            response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
-            )
-            return response
-
-    def delete(self, request, pk = None):
-        """ To delete department data for particular department id or all data of department
+    def delete(self, request: HttpRequest, pk: int) -> HttpResponse:
+        """To delete department data for particular department id or all data of department
 
         Args:
             pk : id of department. Defaults to None.
@@ -125,7 +111,7 @@ class Department(APIView):
         """
         try:
             if pk:
-                delete = MDepartment.objects.get(pk = pk)
+                delete = MDepartment.objects.get(pk=pk)
                 delete.delete()
 
             else:
@@ -133,15 +119,10 @@ class Department(APIView):
                 delete.data()
 
             return Response({"message": "Data  Deleted Successfully"})
-    
+
         except Exception as exception:
             response = HttpResponse(
-            DEPARTMENT_ID_NOT_PRESENT % exception, Status.STATUS_CODE_404
-            )
-            return response
-
-        except :
-            response = HttpResponse(
-            UNEXPECTED_EXCEPTION % exception, Status.STATUS_CODE_500
+                DEPARTMENT_ID_NOT_PRESENT % exception,
+                status=Status.STATUS_CODE_404,
             )
             return response
